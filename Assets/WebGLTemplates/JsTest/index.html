@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Unity WebGL Player | {{{ PRODUCT_NAME }}}</title>
+  </head>
+  <body style="text-align: center; display:flex;">
+  
+    <canvas id="unity-canvas" style="width: {{{ WIDTH }}}px; height: {{{ HEIGHT }}}px; background: {{{ BACKGROUND_FILENAME ? 'url(\'Build/' + BACKGROUND_FILENAME.replace(/'/g, '%27') + '\') center / cover' : BACKGROUND_COLOR }}}"></canvas>
+    
+    <div id="fields" style="display: flex;height: 100%;flex-direction: column;">
+      <div style="display: flex;">
+        <div style="width: 150px;">text field:</div>
+        <input id="text-field" type="text" value="test string">
+      </div>
+      <div style="display: flex;">
+      <div style="width: 150px;">int field:</div>
+      <input id="int-field" type="number" value="12345">
+    </div>
+    <div style="display: flex;">
+      <div style="width: 150px;">double field:</div>
+      <input id="double-field" type="number" value="1.2345">
+    </div>
+    <button onclick="buttonClick()" style="height: 30px;">Send struct to C#</button></div>
+    
+    <script>
+      function buttonClick(){
+        window.JsInterop.SendToCs({
+          TextField: document.getElementById("text-field").value,
+          IntField: parseInt(document.getElementById("int-field").value),
+          DoubleField: parseFloat(document.getElementById("double-field").value)
+        });
+      }
+    </script>
+    <script src="Build/{{{ LOADER_FILENAME }}}"></script>
+    <script>
+      createUnityInstance(document.querySelector("#unity-canvas"), {
+        dataUrl: "Build/{{{ DATA_FILENAME }}}",
+        frameworkUrl: "Build/{{{ FRAMEWORK_FILENAME }}}",
+        codeUrl: "Build/{{{ CODE_FILENAME }}}",
+#if MEMORY_FILENAME
+        memoryUrl: "Build/{{{ MEMORY_FILENAME }}}",
+#endif
+#if SYMBOLS_FILENAME
+        symbolsUrl: "Build/{{{ SYMBOLS_FILENAME }}}",
+#endif
+        streamingAssetsUrl: "StreamingAssets",
+        companyName: "{{{ COMPANY_NAME }}}",
+        productName: "{{{ PRODUCT_NAME }}}",
+        productVersion: "{{{ PRODUCT_VERSION }}}",
+      });
+    </script>
+  </body>
+</html>
